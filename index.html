@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title></title>
+	<style type="text/css">
+		body {
+			background-color: #111;
+			color: white;
+		}
+	</style>
+</head>
+<body>
+	<div><input id="input" type="file"/></div>
+	<div><input id="button" type="button" value="button"/></div>
+	<script type="text/javascript" src="SpreadsheetFile.js"></script>
+<script type="text/javascript">
+	const input = document.getElementById("input");
+	const button = document.getElementById("button");
+
+	const saveDSVFile = (() => {
+		const a = document.createElement("a");
+		a.setAttribute("download", "download");
+		return function(file) {
+			console.log(file);
+			a.setAttribute("href", URL.createObjectURL(file));
+			a.click();
+		}
+	})();
+
+	const array = [
+		["a", "b"],
+		["c", "d", "e"],
+		["f"],
+		[],
+		["g", "h", "i", "j", "k"],
+		["l", "m", "n"],
+		[],
+		[]
+	];
+
+	let file;
+	input.addEventListener("change", evt => {
+		file = input.files[0];
+	});
+
+	const dsv = SpreadsheetFile.dsvFile(array);
+	button.addEventListener("click", saveDSVFile.bind(null, dsv));
+
+	// Immediately Invoked Function Expression
+	let sf;
+	(async function() {
+		sf = new SpreadsheetFile(dsv);
+		const ssf = sf;
+		// const ssf = new SpreadsheetFile(dsv);
+		await ssf.ready;
+		console.log(ssf.cols(1, 2));
+	})();
+</script>
+</body>
+</html>
